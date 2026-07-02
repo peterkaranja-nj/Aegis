@@ -58,9 +58,9 @@ export default function SettingsPage() {
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
               {[
-                { label:'First name', value:'William', placeholder:'First name' },
-                { label:'Last name',  value:'Blake',   placeholder:'Last name' },
-                { label:'Email',      value:'william@aegis.finance', placeholder:'Email' },
+                { label:'First name', value:'Peter',   placeholder:'First name' },
+                { label:'Last name',  value:'Karanja', placeholder:'Last name' },
+                { label:'Email',      value:'peter@aegis.finance',   placeholder:'Email' },
                 { label:'Company',    value:'Aegis Finance Ltd',      placeholder:'Company' },
                 { label:'Phone',      value:'+44 20 7946 0123',       placeholder:'Phone' },
                 { label:'Timezone',   value:'Europe/London',           placeholder:'Timezone' },
