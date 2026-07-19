@@ -1,25 +1,21 @@
 'use client'
 import { useState } from 'react'
-import { TrendingUp, TrendingDown, Users, Zap } from 'lucide-react'
+import { TrendingUp, TrendingDown, Zap } from 'lucide-react'
 import { REVENUE_DATA, FUNNEL_DATA, COUNTRIES_DATA } from '@/lib/data'
-import { RevenueBarChart, PaymentMethodsDonut, MultiLineChart } from '@/components/charts/Charts'
+import { RevenueBarChart, PaymentMethodsDonut } from '@/components/charts/Charts'
 
 const KPI = [
   { label: 'Total Revenue',    value: '$84,231', delta: '+12.5%', up: true,  icon: TrendingUp },
   { label: 'Transactions',     value: '2,847',   delta: '+8.2%',  up: true,  icon: Zap },
   { label: 'Avg Order Value',  value: '$29.59',  delta: '-2.1%',  up: false, icon: TrendingDown },
-  { label: 'Active Customers', value: '2,641',   delta: '+5.3%',  up: true,  icon: Users },
+  { label: 'Active Customers', value: '2,641',   delta: '+5.3%',  up: true,  icon: TrendingUp },
 ]
 
 const PAYMENT_METHODS = [
-  { name: 'Card',          value: 58, color: '#00C896' },
+  { name: 'Card',          value: 58, color: '#25D366' },
   { name: 'Bank Transfer', value: 27, color: '#7C3AED' },
   { name: 'Crypto',        value: 15, color: '#F59E0B' },
 ]
-
-const chartData = REVENUE_DATA.labels.map((l, i) => ({
-  month: l, revenue: REVENUE_DATA.revenue[i], expenses: REVENUE_DATA.expenses[i],
-}))
 
 export default function AnalyticsPage() {
   const [period, setPeriod] = useState<'monthly' | 'weekly'>('monthly')
@@ -27,7 +23,7 @@ export default function AnalyticsPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* KPIs */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
+      <div className="r-grid-4">
         {KPI.map((k, i) => {
           const Icon = k.icon
           return (
@@ -46,25 +42,25 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Revenue + Payment Methods */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 14 }}>
+      <div className="r-grid-2-1">
         <div className="card card-p anim-fade-up delay-2">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
             <div>
               <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-text)' }}>Revenue vs Expenses</div>
               <div style={{ fontSize: 12, color: 'var(--color-text-2)', marginTop: 2 }}>Full year overview</div>
             </div>
             <div style={{ display: 'flex', gap: 6 }}>
-              {['monthly','weekly'].map(p => (
-                <button key={p} onClick={() => setPeriod(p as any)} style={{ padding: '5px 12px', borderRadius: 8, border: `1.5px solid ${period === p ? 'var(--color-green)' : 'var(--color-border)'}`, background: period === p ? 'var(--color-green-light)' : 'transparent', color: period === p ? 'var(--color-green-dark)' : 'var(--color-text-2)', fontSize: 12, fontWeight: 600, cursor: 'pointer', textTransform: 'capitalize' }}>
+              {(['monthly', 'weekly'] as const).map(p => (
+                <button key={p} onClick={() => setPeriod(p)} style={{ padding: '5px 12px', borderRadius: 8, border: `1.5px solid ${period === p ? 'var(--color-green)' : 'var(--color-border)'}`, background: period === p ? 'var(--color-green-light)' : 'transparent', color: period === p ? 'var(--color-green-dark)' : 'var(--color-text-2)', fontSize: 12, fontWeight: 600, cursor: 'pointer', textTransform: 'capitalize' }}>
                   {p}
                 </button>
               ))}
             </div>
           </div>
-          <div style={{ display: 'flex', gap: 16, marginBottom: 12 }}>
-            {[['Revenue','#00C896','solid'],['Expenses','#7C3AED','dashed']].map(([n,c,s]) => (
+          <div style={{ display: 'flex', gap: 16, marginBottom: 12, flexWrap: 'wrap' }}>
+            {[['Revenue','#25D366','solid'],['Expenses','#7C3AED','dashed']].map(([n,c,s]) => (
               <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--color-text-2)' }}>
-                <div style={{ width: 20, height: 2, background: c, borderStyle: s as any, borderWidth: 1, borderColor: c }} />
+                <div style={{ width: 20, height: 2, background: c, borderStyle: s as 'solid' | 'dashed', borderWidth: 1, borderColor: c }} />
                 {n}
               </div>
             ))}
@@ -92,7 +88,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Countries + Funnel */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+      <div className="r-grid-2">
         <div className="card card-p anim-fade-up delay-4">
           <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-text)', marginBottom: 16 }}>Revenue by Country</div>
           {COUNTRIES_DATA.map(c => (

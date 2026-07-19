@@ -1,11 +1,8 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { TrendingUp, TrendingDown, Plus, Send, ArrowUpRight, ChevronRight } from 'lucide-react'
-import {
-  TRANSACTIONS, CURRENCIES, INCOME_DATA, EXPENSE_DATA,
-  WALLETS, type Transaction
-} from '@/lib/data'
+import { TrendingUp, TrendingDown, Send, ArrowUpRight, ChevronRight } from 'lucide-react'
+import { TRANSACTIONS, CURRENCIES, INCOME_DATA, EXPENSE_DATA } from '@/lib/data'
 import { formatCurrency, statusColor } from '@/lib/utils'
 import { IncomeAreaChart, ExpenseMiniBar, DonutSmall } from '@/components/charts/Charts'
 
@@ -13,25 +10,24 @@ function AnimatedNumber({ target, prefix = '$' }: { target: number, prefix?: str
   const [display, setDisplay] = useState(0)
   const ref = useRef<NodeJS.Timeout | null>(null)
   useEffect(() => {
-    const duration = 1200
     const steps = 60
-    const increment = target / steps
     let current = 0
+    const increment = target / steps
     ref.current = setInterval(() => {
       current += increment
       if (current >= target) { setDisplay(target); clearInterval(ref.current!) }
       else setDisplay(Math.round(current))
-    }, duration / steps)
+    }, 1200 / steps)
     return () => clearInterval(ref.current!)
   }, [target])
   return <span>{prefix}{display.toLocaleString()}</span>
 }
 
 const QUICK_STATS = [
-  { label: 'Total Balance',   value: 20670,  prefix: '$', delta: '+4.2%',  up: true  },
-  { label: 'Monthly Income',  value: 21000,  prefix: '$', delta: '+12.5%', up: true  },
-  { label: 'Monthly Spend',   value: 8640,   prefix: '$', delta: '-3.1%',  up: false },
-  { label: 'Success Rate',    value: 98,     prefix: '',  delta: '+0.3%',  up: true, suffix: '%' },
+  { label: 'Total Balance',  value: 20670, prefix: '$', delta: '+4.2%',  up: true  },
+  { label: 'Monthly Income', value: 21000, prefix: '$', delta: '+12.5%', up: true  },
+  { label: 'Monthly Spend',  value: 8640,  prefix: '$', delta: '-3.1%',  up: false },
+  { label: 'Success Rate',   value: 98,    prefix: '',  delta: '+0.3%',  up: true, suffix: '%' },
 ]
 
 const TRANSFER_CONTACTS = [
@@ -46,7 +42,7 @@ export default function OverviewPage() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
 
       {/* Row 1: KPI cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
+      <div className="r-grid-4">
         {QUICK_STATS.map((s, i) => (
           <div key={s.label} className={`card card-p anim-fade-up delay-${i + 1}`} style={{ cursor: 'default' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
@@ -56,8 +52,7 @@ export default function OverviewPage() {
               </div>
             </div>
             <div style={{ fontSize: 26, fontWeight: 800, color: 'var(--color-text)', letterSpacing: '-0.02em', lineHeight: 1 }}>
-              <AnimatedNumber target={s.value} prefix={s.prefix} />
-              {s.suffix}
+              <AnimatedNumber target={s.value} prefix={s.prefix} />{s.suffix}
             </div>
             <div className={`delta ${s.up ? 'delta-up' : 'delta-down'}`} style={{ marginTop: 8, fontSize: 11 }}>
               {s.delta} vs last month
@@ -67,13 +62,9 @@ export default function OverviewPage() {
       </div>
 
       {/* Row 2: Balance + Income chart + Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr 300px', gap: 14 }}>
-
-        {/* Balance card (green) */}
-        <div className="anim-fade-up delay-1" style={{
-          background: 'var(--color-green)', borderRadius: 16, padding: 20,
-          color: 'white', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column',
-        }}>
+      <div className="r-grid-overview-mid">
+        {/* Balance card */}
+        <div className="anim-fade-up delay-1" style={{ background: 'var(--color-green)', borderRadius: 16, padding: 20, color: 'white', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
           <div style={{ position: 'absolute', top: -24, right: -24, width: 120, height: 120, borderRadius: '50%', background: 'rgba(255,255,255,0.08)' }} />
           <div style={{ position: 'absolute', bottom: -16, left: 40, width: 80, height: 80, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
           <div style={{ position: 'relative' }}>
@@ -83,20 +74,17 @@ export default function OverviewPage() {
             </div>
             <div style={{ fontSize: 12, opacity: 0.65, marginTop: 4 }}>Across all accounts</div>
           </div>
-
-          {/* Mini donut progress */}
           <div style={{ margin: '16px 0', display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ flex: 1, height: 4, background: 'rgba(255,255,255,0.2)', borderRadius: 99, overflow: 'hidden' }}>
               <div style={{ width: '68%', height: '100%', background: 'white', borderRadius: 99 }} />
             </div>
             <span style={{ fontSize: 12, opacity: 0.75 }}>68% of limit</span>
           </div>
-
           <div style={{ display: 'flex', gap: 10, marginTop: 'auto', position: 'relative' }}>
             <button className="btn" style={{ flex: 1, background: 'rgba(255,255,255,0.15)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', justifyContent: 'center' }}>
               <ArrowUpRight size={13} /> Deposit
             </button>
-            <button className="btn" style={{ flex: 1, background: 'white', color: '#009970', justifyContent: 'center', fontWeight: 700 }}>
+            <button className="btn" style={{ flex: 1, background: 'white', color: '#1DA851', justifyContent: 'center', fontWeight: 700 }}>
               <Send size={13} /> Send
             </button>
           </div>
@@ -104,7 +92,7 @@ export default function OverviewPage() {
 
         {/* Income chart */}
         <div className="card card-p anim-fade-up delay-2" style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
             <div>
               <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-text)' }}>Income Overview</div>
               <div style={{ fontSize: 12, color: 'var(--color-text-2)', marginTop: 2 }}>6-month revenue trend</div>
@@ -114,14 +102,13 @@ export default function OverviewPage() {
               <span className="delta delta-up" style={{ fontSize: 11 }}>+$3,221</span>
             </div>
           </div>
-          <div style={{ flex: 1, height: 180 }}>
+          <div style={{ flex: 1, minHeight: 160 }}>
             <IncomeAreaChart data={INCOME_DATA} />
           </div>
         </div>
 
-        {/* Right col: credit cards + quick transfer */}
+        {/* Cards + quick transfer */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {/* Credit cards */}
           <div className="card card-p-sm anim-fade-up delay-1">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
               <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text)' }}>Your Cards</span>
@@ -147,13 +134,12 @@ export default function OverviewPage() {
             </div>
           </div>
 
-          {/* Quick transfer */}
           <div className="card card-p-sm anim-fade-up delay-2">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
               <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text)' }}>Quick Transfer</span>
-              <Link href="/wallets" style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-green-dark)', textDecoration: 'none' }}>View all</Link>
+              <Link href="/dashboard/wallets" style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-green-dark)', textDecoration: 'none' }}>View all</Link>
             </div>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', flexWrap: 'wrap' }}>
               {TRANSFER_CONTACTS.map(c => (
                 <button key={c.initials} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer' }}>
                   <div style={{ width: 38, height: 38, borderRadius: '50%', background: c.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 12, fontWeight: 700, transition: 'transform 0.2s' }}
@@ -177,9 +163,8 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* Row 3: Mini income + Expenses + FX */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
-        {/* Income donut */}
+      {/* Row 3: Mini stats */}
+      <div className="r-grid-3">
         <div className="card card-p-sm anim-fade-up delay-2">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-3)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Income</div>
@@ -192,7 +177,6 @@ export default function OverviewPage() {
           <div className="delta delta-up" style={{ marginTop: 6, fontSize: 11 }}>+8.2% this month</div>
         </div>
 
-        {/* Expense mini bar */}
         <div className="card card-p-sm anim-fade-up delay-3">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-3)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Expenses</div>
@@ -204,11 +188,10 @@ export default function OverviewPage() {
           </div>
         </div>
 
-        {/* FX rates mini */}
         <div className="card card-p-sm anim-fade-up delay-4">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
             <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text)' }}>FX Rates</span>
-            <Link href="/wallets" style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-green-dark)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 2 }}>All <ChevronRight size={12} /></Link>
+            <Link href="/dashboard/wallets" style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-green-dark)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 2 }}>All <ChevronRight size={12} /></Link>
           </div>
           {CURRENCIES.slice(0, 3).map(c => (
             <div key={c.code} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 0', borderBottom: '1px solid var(--color-border-light)' }}>
@@ -221,50 +204,44 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* Row 4: Transactions + FX full */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 14 }}>
-
-        {/* Recent transactions */}
+      {/* Row 4: Transactions + Currencies */}
+      <div className="r-grid-aside">
         <div className="card card-p anim-fade-up delay-3">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
             <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-text)' }}>Recent Transactions</span>
-            <Link href="/transactions" style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 600, color: 'var(--color-green-dark)', textDecoration: 'none' }}>
+            <Link href="/dashboard/transactions" style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 600, color: 'var(--color-green-dark)', textDecoration: 'none' }}>
               View all <ChevronRight size={13} />
             </Link>
           </div>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Merchant</th>
-                <th>Amount</th>
-                <th>Date</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {TRANSACTIONS.slice(0, 6).map(t => (
-                <tr key={t.id}>
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <div style={{ width: 34, height: 34, borderRadius: 10, background: t.logoBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>{t.logo}</div>
-                      <div>
-                        <div style={{ fontWeight: 600 }}>{t.name}</div>
-                        <div style={{ fontSize: 11, color: 'var(--color-text-3)' }}>{t.category}</div>
+          <div className="table-scroll">
+            <table className="data-table">
+              <thead>
+                <tr><th>Merchant</th><th>Amount</th><th>Date</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                {TRANSACTIONS.slice(0, 6).map(t => (
+                  <tr key={t.id}>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{ width: 34, height: 34, borderRadius: 10, background: t.logoBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>{t.logo}</div>
+                        <div>
+                          <div style={{ fontWeight: 600 }}>{t.name}</div>
+                          <div style={{ fontSize: 11, color: 'var(--color-text-3)' }}>{t.category}</div>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td style={{ fontWeight: 700, color: t.amount > 0 ? 'var(--color-green-dark)' : 'var(--color-text)' }}>
-                    {t.amount > 0 ? '+' : ''}{formatCurrency(t.amount)}
-                  </td>
-                  <td style={{ color: 'var(--color-text-2)', fontSize: 12 }}>{t.date}</td>
-                  <td><span className={`badge ${statusColor(t.status)}`} style={{ fontSize: 10 }}>{t.status}</span></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    </td>
+                    <td style={{ fontWeight: 700, color: t.amount > 0 ? 'var(--color-green-dark)' : 'var(--color-text)' }}>
+                      {t.amount > 0 ? '+' : ''}{formatCurrency(t.amount)}
+                    </td>
+                    <td style={{ color: 'var(--color-text-2)', fontSize: 12 }}>{t.date}</td>
+                    <td><span className={`badge ${statusColor(t.status)}`} style={{ fontSize: 10 }}>{t.status}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        {/* Currencies market full */}
         <div className="card card-p anim-fade-up delay-4">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
             <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-text)' }}>Currencies Market</span>

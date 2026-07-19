@@ -326,3 +326,49 @@
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   }
 }
+
+/* ─── Responsive grid helpers ── */
+.r-grid-4            { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.r-grid-3            { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.r-grid-2            { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.r-grid-2-1          { display: grid; grid-template-columns: 2fr 1fr;         gap: 14px; }
+.r-grid-aside        { display: grid; grid-template-columns: 1fr 320px;       gap: 14px; }
+.r-grid-overview-mid { display: grid; grid-template-columns: 260px 1fr 300px; gap: 14px; }
+.table-scroll        { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.hamburger-btn       { display: none; }
+.mobile-backdrop     { display: none; position: fixed; inset: 0; z-index: 998; background: rgba(0,0,0,0.18); cursor: pointer; }
+
+@media (max-width: 1024px) {
+  .r-grid-4            { grid-template-columns: repeat(2, 1fr); }
+  .r-grid-overview-mid { grid-template-columns: repeat(2, 1fr); }
+  .r-grid-2-1          { grid-template-columns: 1fr; }
+  .r-grid-aside        { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .hamburger-btn    { display: flex !important; }
+  .topbar-search    { display: none !important; }
+  .topbar-user-name { display: none !important; }
+  .mobile-backdrop  { display: block; }
+
+  .sidebar-wrap {
+    position: fixed !important;
+    left: 0 !important; top: 0 !important; bottom: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 20px 20px 0 !important;
+    width: 220px !important;
+    transform: translateX(-224px);
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1) !important;
+    z-index: 999 !important;
+    pointer-events: auto !important;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.18);
+  }
+  .sidebar-wrap.mobile-open { transform: translateX(0); }
+
+  .r-main { padding: 16px !important; gap: 12px !important; }
+}
+
+@media (max-width: 640px) {
+  .r-grid-4, .r-grid-3, .r-grid-2, .r-grid-2-1,
+  .r-grid-overview-mid, .r-grid-aside { grid-template-columns: 1fr; }
+}

@@ -6,11 +6,10 @@ export default function WalletsPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-      {/* Wallet cards grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 14 }}>
+      <div className="r-grid-2">
         {WALLETS.map((w, i) => (
           <div key={w.currency} className={`wallet-card anim-fade-up delay-${i+1}`} style={{ background: w.gradient }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, position: 'relative' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, position: 'relative', flexWrap: 'wrap', gap: 10 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span style={{ fontSize: 28 }}>{w.flag}</span>
                 <div>
@@ -30,7 +29,7 @@ export default function WalletsPage() {
                 Pending: {w.symbol}{w.pending.toLocaleString()}
               </div>
             )}
-            <div style={{ display: 'flex', gap: 10, marginTop: 20, position: 'relative' }}>
+            <div style={{ display: 'flex', gap: 10, marginTop: 20, position: 'relative', flexWrap: 'wrap' }}>
               <button style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(255,255,255,0.15)', border: 'none', color: 'white', borderRadius: 8, padding: '7px 14px', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
                 <ArrowUpRight size={13} /> Send
               </button>
@@ -42,43 +41,37 @@ export default function WalletsPage() {
         ))}
       </div>
 
-      {/* Add wallet */}
       <button className="btn btn-secondary anim-fade-up delay-3" style={{ alignSelf: 'flex-start', gap: 8 }}>
         <Plus size={15} /> Add new wallet
       </button>
 
-      {/* Recent activity */}
       <div className="card card-p anim-fade-up delay-4">
         <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-text)', marginBottom: 14 }}>Recent Activity</div>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Merchant</th>
-              <th>Wallet</th>
-              <th>Amount</th>
-              <th>Date</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {TRANSACTIONS.slice(0, 8).map(t => (
-              <tr key={t.id}>
-                <td>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 34, height: 34, borderRadius: 10, background: t.logoBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>{t.logo}</div>
-                    <div><div style={{ fontWeight: 600 }}>{t.name}</div><div style={{ fontSize: 11, color: 'var(--color-text-3)' }}>{t.id}</div></div>
-                  </div>
-                </td>
-                <td><span className="badge badge-blue" style={{ fontSize: 11 }}>USD</span></td>
-                <td style={{ fontWeight: 700, color: t.amount > 0 ? 'var(--color-green-dark)' : 'var(--color-text)' }}>
-                  {t.amount > 0 ? '+' : ''}{Math.abs(t.amount).toFixed(2)}
-                </td>
-                <td style={{ fontSize: 12, color: 'var(--color-text-2)' }}>{t.date}</td>
-                <td><span className={`badge ${statusColor(t.status)}`} style={{ fontSize: 11 }}>{t.status}</span></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="table-scroll">
+          <table className="data-table">
+            <thead>
+              <tr><th>Merchant</th><th>Wallet</th><th>Amount</th><th>Date</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              {TRANSACTIONS.slice(0, 8).map(t => (
+                <tr key={t.id}>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{ width: 34, height: 34, borderRadius: 10, background: t.logoBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>{t.logo}</div>
+                      <div><div style={{ fontWeight: 600 }}>{t.name}</div><div style={{ fontSize: 11, color: 'var(--color-text-3)' }}>{t.id}</div></div>
+                    </div>
+                  </td>
+                  <td><span className="badge badge-blue" style={{ fontSize: 11 }}>USD</span></td>
+                  <td style={{ fontWeight: 700, color: t.amount > 0 ? 'var(--color-green-dark)' : 'var(--color-text)' }}>
+                    {t.amount > 0 ? '+' : ''}{Math.abs(t.amount).toFixed(2)}
+                  </td>
+                  <td style={{ fontSize: 12, color: 'var(--color-text-2)' }}>{t.date}</td>
+                  <td><span className={`badge ${statusColor(t.status)}`} style={{ fontSize: 11 }}>{t.status}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )
